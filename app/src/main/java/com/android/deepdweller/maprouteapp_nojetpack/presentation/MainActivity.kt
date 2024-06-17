@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.android.deepdweller.maprouteapp_nojetpack.R
 import com.android.deepdweller.maprouteapp_nojetpack.databinding.ActivityMainBinding
 import com.android.deepdweller.maprouteapp_nojetpack.presentation.map.ApiRegistrationFragment
+import com.android.deepdweller.maprouteapp_nojetpack.presentation.map.MapFragment
 import com.android.deepdweller.maprouteapp_nojetpack.presentation.map.MapViewModel
 import com.yandex.mapkit.MapKitFactory
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,7 +24,8 @@ class MainActivity : AppCompatActivity() {
     //LifeCycle
     override fun onCreate(savedInstanceState: Bundle?) {
         //MapInfoInit
-
+        MapKitFactory.setApiKey("24104aca-2b8a-4816-ba39-a4f3de782635")
+        MapKitFactory.initialize(applicationContext)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -37,13 +39,11 @@ class MainActivity : AppCompatActivity() {
         hostFragment()
     }
 
-
-
     private fun hostFragment(){
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
-        val mapFragment = ApiRegistrationFragment()
+        val mapFragment = MapFragment()
 
         fragmentTransaction.replace(R.id.root_host, mapFragment)
         fragmentTransaction.commit()

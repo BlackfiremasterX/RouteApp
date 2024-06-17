@@ -50,7 +50,7 @@ class MapFragment : BaseFragment(R.layout.fragment_map) {
     private val viewModel: MapViewModel by viewModels()
     private var myLocationPlaceMark: PlacemarkMapObject? = null
     lateinit var  api: String
-    private lateinit var mapKitApi: Job
+
 
     private val cameraListener = CameraListener { _, cameraPosition, cameraUpdateReason, _ ->
         if (cameraUpdateReason == CameraUpdateReason.GESTURES) {
@@ -71,44 +71,23 @@ class MapFragment : BaseFragment(R.layout.fragment_map) {
             field = value
         }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    private fun initMapsApi()
-    {
-        api = viewModel.getApiKey().toString()
-        MapKitFactory.setApiKey("$api")
-        MapKitFactory.initialize(requireContext())
-        binding.mapview.onStart()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.mapview.onStart()
+        super.onViewCreated(view, savedInstanceState)
         initRouteData()
     }
 
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        mapKitApi = Job()
-        val scope = CoroutineScope(Dispatchers.Main + mapKitApi)
-        scope.launch {
-            viewModel.apiKeyFlow.collect { apiKey ->
-                initMapsApi()
-                Log.d("Observer", "New apiKey value: $apiKey")
-            }
-        }
-        super.onViewCreated(view, savedInstanceState)
-    }
-
     override fun onDestroyView() {
-        MapKitFactory.getInstance().onStop()
         binding.mapview.onStop()
         super.onDestroyView()
-        mapKitApi.cancel()
     }
 
-
-    fun initRouteData() {
+    private fun initRouteData() {
         val drivingRouter =
             DirectionsFactory.getInstance().createDrivingRouter(DrivingRouterType.COMBINED)
 

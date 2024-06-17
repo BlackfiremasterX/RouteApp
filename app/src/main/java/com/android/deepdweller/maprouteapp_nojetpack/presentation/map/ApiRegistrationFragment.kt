@@ -38,14 +38,11 @@ class ApiRegistrationFragment : BaseFragment(R.layout.fragment_api_registration)
     private fun initAPIInputBehaviour() {
         binding.GO.setOnClickListener{
             viewModel.setApiKey(binding.APITokenInput.text.toString())
-            if (viewModel.getApiKey() == null)
                 parentFragmentManager.beginTransaction().apply {
                     replace(R.id.root_host, MapFragment())
                     addToBackStack(null)
                     commit()
                 }
-
-
 
         }
         binding.APITokenInput.setOnEditorActionListener { _, actionId, _ ->
